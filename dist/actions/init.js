@@ -24,7 +24,11 @@ var _logger2 = _interopRequireDefault(_logger);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = async function init(templateName, projectName) {
+exports.default = async function init(templateName, projectName, ...rest) {
+  console.log('arguments', templateName, projectName);
+  if (!templateName || !projectName) {
+    throw new Error('templateName or projectName not exist');
+  }
   const program = this;
   if (_fs2.default.existsSync(projectName)) {
     console.error(_logSymbols2.default.error, _chalk2.default.red(`ERROR: peoject ${projectName} already exists!`));

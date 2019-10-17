@@ -3,16 +3,18 @@ import path from 'path'
 import downloadGit from 'download-git-repo'
 import ora from 'ora'
 import { sync as rmSync } from 'rimraf'
+import shell from 'shelljs'
 import { isLocalPath, getTemplatePath } from './local-path'
 import generate from './generate'
 import logger from './logger'
 import { getConfig } from './rc'
-import { HOME } from './constants'
+import { HOME, __DEV__ } from './constants'
 
 export function downloadAndGenerate (templateName, projectName) {
   const program = this
   const dest = path.resolve(projectName)
   const clone = program.clone || false
+  const privateRepo = program.private || false
 
   function generateProject(projectName, templatePath, dest) {
     return generate(projectName, templatePath, dest, (err) => {
@@ -24,17 +26,37 @@ export function downloadAndGenerate (templateName, projectName) {
     })
   }
 
+  async function cloneFromPrivateGitRepo(gitRepoUrl, dest) {
+    if (existsSync(dest)) rmSync(dest)
+    if (!shell.which('git')) {
+      shell.echo('Sorry, this script requires git');
+      shell.exit(1);
+    }
+    const projectName = path.basename(dest)
+    const workDir = path.dirname(dest)
+    shell.cd(workDir)
+    const command = `git clone ${gitRepoUrl} ${projectName}`
+    console.log(command)
+    shell.exec(command)
+    return true;
+  }
+
   async function downloadTemplate (templateName, projectName) {
     let config = getConfig()
     let api = `${config.registry}/${templateName}`
     return new Promise((resolve, reject) => {
-      downloadGit(api, projectName, { clone }, err => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve()
-        }
-      })
+      __DEV__ && console.log('download repo from ', api)
+      if (privateRepo) {
+        cloneFromPrivateGitRepo(`${api}.git`, projectName).then(resolve, reject)
+      } else {
+        downloadGit(`direct:${api}`, projectName, { clone, }, err => {
+          if (err) {
+            reject(err)
+          } else {
+            resolve()
+          }
+        })
+      }
     })
   }
 

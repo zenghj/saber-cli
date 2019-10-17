@@ -40,8 +40,14 @@ Usage:
   - saber config reset # reset config
 ```
 
-You can use `saber config set registry {registrySource}` to change templates' downloading source.
+You can use `saber config set registry {registrySource}` to change templates' downloading source. Then it will get template from `${registrySource}/${templateName}`
 
 ## Supported templates
 
 comming soon...
+
+## develop
+
+```
+yarn link 
+```

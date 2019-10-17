@@ -21,6 +21,10 @@ var _ora2 = _interopRequireDefault(_ora);
 
 var _rimraf = require('rimraf');
 
+var _shelljs = require('shelljs');
+
+var _shelljs2 = _interopRequireDefault(_shelljs);
+
 var _localPath = require('./local-path');
 
 var _generate = require('./generate');
@@ -41,6 +45,7 @@ function downloadAndGenerate(templateName, projectName) {
   const program = this;
   const dest = _path2.default.resolve(projectName);
   const clone = program.clone || false;
+  const privateRepo = program.private || false;
 
   function generateProject(projectName, templatePath, dest) {
     return (0, _generate2.default)(projectName, templatePath, dest, err => {
@@ -52,17 +57,37 @@ function downloadAndGenerate(templateName, projectName) {
     });
   }
 
+  async function cloneFromPrivateGitRepo(gitRepoUrl, dest) {
+    if ((0, _fs.existsSync)(dest)) (0, _rimraf.sync)(dest);
+    if (!_shelljs2.default.which('git')) {
+      _shelljs2.default.echo('Sorry, this script requires git');
+      _shelljs2.default.exit(1);
+    }
+    const projectName = _path2.default.basename(dest);
+    const workDir = _path2.default.dirname(dest);
+    _shelljs2.default.cd(workDir);
+    const command = `git clone ${gitRepoUrl} ${projectName}`;
+    console.log(command);
+    _shelljs2.default.exec(command);
+    return true;
+  }
+
   async function downloadTemplate(templateName, projectName) {
     let config = (0, _rc.getConfig)();
     let api = `${config.registry}/${templateName}`;
     return new Promise((resolve, reject) => {
-      (0, _downloadGitRepo2.default)(api, projectName, { clone }, err => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
+      _constants.__DEV__ && console.log('download repo from ', api);
+      if (privateRepo) {
+        cloneFromPrivateGitRepo(`${api}.git`, projectName).then(resolve, reject);
+      } else {
+        (0, _downloadGitRepo2.default)(`direct:${api}`, projectName, { clone }, err => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      }
     });
   }
 
