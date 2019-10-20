@@ -1,4 +1,5 @@
 import commander from 'commander';
+import './update-notifier';
 import { VERSION, __PROD__ } from './utils/constants'
 import apply from './apply'
 import { getCommandOptions, getAvailableOptionKeys, getAvailableOptionNames} from './options'
