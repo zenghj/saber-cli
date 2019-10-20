@@ -1,6 +1,6 @@
 {
   "name": "@zenghj/saber-cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Saber-cli is a project scaffold tool used to scaffold your project based on [saber-cli-templates](https://github.com/saber-cli-templates).",
   "main": "dist/main.js",
   "bin": {
