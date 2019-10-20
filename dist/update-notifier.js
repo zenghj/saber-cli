@@ -10,7 +10,7 @@ var _package2 = _interopRequireDefault(_package);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-(0, _updateNotifier2.default)({ packageJson: _package2.default }).notify();
+(0, _updateNotifier2.default)({ pkg: _package2.default }).notify();
 
 // test update
 // updateNotifier({

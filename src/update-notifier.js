@@ -1,7 +1,7 @@
 import updateNotifier from 'update-notifier'
 import packageJson from '../package.json'
- 
-updateNotifier({packageJson}).notify();
+
+updateNotifier({pkg: packageJson}).notify();
 
 // test update
 // updateNotifier({
