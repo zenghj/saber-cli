@@ -3,9 +3,10 @@ import chalk from 'chalk'
 import symbol from 'log-symbols'
 import { downloadAndGenerate } from '../utils/download'
 import logger from '../utils/logger';
+import { __PROD__ } from '../utils/constants'
 
 export default async function init(templateName, projectName, ...rest) {
-  console.log('arguments', templateName, projectName);
+  !__PROD__ && console.log('arguments', templateName, projectName);
   if (!templateName || !projectName) {
     throw new Error('templateName or projectName not exist');
   }

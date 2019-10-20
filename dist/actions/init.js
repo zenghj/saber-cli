@@ -22,10 +22,12 @@ var _logger = require('../utils/logger');
 
 var _logger2 = _interopRequireDefault(_logger);
 
+var _constants = require('../utils/constants');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = async function init(templateName, projectName, ...rest) {
-  console.log('arguments', templateName, projectName);
+  !_constants.__PROD__ && console.log('arguments', templateName, projectName);
   if (!templateName || !projectName) {
     throw new Error('templateName or projectName not exist');
   }

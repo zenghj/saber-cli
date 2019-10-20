@@ -4,6 +4,8 @@ var _commander = require('commander');
 
 var _commander2 = _interopRequireDefault(_commander);
 
+require('./update-notifier');
+
 var _constants = require('./utils/constants');
 
 var _apply = require('./apply');

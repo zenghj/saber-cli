@@ -1,2 +1,2 @@
-#!/usr/bin/env NODE_ENV=development node
+#!/usr/bin/env NODE_ENV=production node
 require('../dist/main.js');
