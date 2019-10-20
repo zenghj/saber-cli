@@ -11,7 +11,8 @@
     "compile": "babel src -d dist",
     "watch": "babel src -d dist --watch",
     "debug": "node-nightly --inspect-brk ./bin/www init demo demo",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "release": "yarn compile && yarn publish --access public"
   },
   "dependencies": {
     "abbrev": "^1.1.1",
