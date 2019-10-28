@@ -1,0 +1,13 @@
+{
+  "allowSyntheticDefaultImports": true,
+  "compilerOptions": {
+    "outDir": "dist",
+    "target": "es5",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "declaration": true,  
+  },
+  "include": [
+    "src"
+  ]
+}

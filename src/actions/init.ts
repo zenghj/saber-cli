@@ -4,13 +4,13 @@ import symbol from 'log-symbols'
 import { downloadAndGenerate } from '../utils/download'
 import logger from '../utils/logger';
 import { __PROD__ } from '../utils/constants'
+import { ActionMethod, Command } from '../index.d'
 
-export default async function init(templateName, projectName, ...rest) {
+const initAction: ActionMethod = async function init(program: Command, templateName: string, projectName: string, ...rest) {
   !__PROD__ && console.log('arguments', templateName, projectName);
   if (!templateName || !projectName) {
-    throw new Error('templateName or projectName not exist');
+    return logger.fatal('templateName or projectName not exist');
   }
-  const program = this
   if (fs.existsSync(projectName)) {
     console.error(symbol.error, chalk.red(`ERROR: peoject ${projectName} already exists!`))
     return process.exit(1)
@@ -21,3 +21,4 @@ export default async function init(templateName, projectName, ...rest) {
     logger.fatal('init fails', err)
   }
 }
+export default initAction;

@@ -7,10 +7,12 @@ import shell from 'shelljs'
 import { isLocalPath, getTemplatePath } from './local-path'
 import generate from './generate'
 import logger from './logger'
-import { getConfig } from './rc'
+import RC from './rc'
 import { HOME, __DEV__ } from './constants'
 
-export function downloadAndGenerate (templateName, projectName) {
+const rc = RC.getInstance();
+
+export function downloadAndGenerate (templateName: string, projectName: string) {
   const program = this
   const dest = path.resolve(projectName)
   const clone = program.clone || false
@@ -41,15 +43,15 @@ export function downloadAndGenerate (templateName, projectName) {
     return true;
   }
 
-  async function downloadTemplate (templateName, projectName) {
-    let config = getConfig()
+  async function downloadTemplate (templateName: string, projectName: string) {
+    let config = rc.getConfig()
     let api = `${config.registry}/${templateName}`
     return new Promise((resolve, reject) => {
       __DEV__ && console.log('download repo from ', api)
       if (privateRepo) {
         cloneFromPrivateGitRepo(`${api}.git`, projectName).then(resolve, reject)
       } else {
-        downloadGit(`direct:${api}`, projectName, { clone, }, err => {
+        downloadGit(`${api}`, projectName, { clone, }, err => {
           if (err) {
             reject(err)
           } else {
@@ -75,7 +77,7 @@ export function downloadAndGenerate (templateName, projectName) {
     downloadTemplate(templateName, tmp).then(() => {
       return generateProject(projectName, tmp, dest)
     }, err => {
-      return logger.fatal(`Fail to download template: ${templateName}, ${err}`)
+      return logger.fatal(`Fail to download template: ${templateName}\n${err}`)
     }).finally(() => {
       spinner.stop()
     })

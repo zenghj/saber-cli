@@ -1,8 +1,8 @@
 import evaluate from './eval'
 import match from 'minimatch'
+import { MetaFilters, MetalSmithFiles, MetaData, CallbackFunction } from '../index.d'
 
-export default function (filters, files, data, done) {
-  debugger
+export default function filter(filters: MetaFilters, files: MetalSmithFiles, data: MetaData, done: CallbackFunction) {
   if (!filters) {
     return done()
   }
