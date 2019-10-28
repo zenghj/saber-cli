@@ -7,10 +7,14 @@ import filter from './filter'
 import logger from './logger'
 import renderFiles from './render-files'
 import getGitUser from './git-user'
+import { MetalSmithPlugin, MetaOption } from '../index.d'
 const render = consolidate.handlebars.render
 
-function getMetaData(name, dir) {
-  let data = {}
+function getMetaData(name:string, dir:string):MetaOption {
+  let data:MetaOption = {
+    prompts: {},
+    completeMessage: '',
+  }
   const json = path.join(dir, 'meta.json')
   if (existsSync(json)) {
     data = require(json)
@@ -23,11 +27,12 @@ function getMetaData(name, dir) {
   return data
 }
 
-function setDefaultPromptVal(opts, key, value) {
+function setDefaultPromptVal(opts: MetaOption, key: string, value) {
   const prompts = opts.prompts || (opts.prompts = {})
   if (!prompts[key] || typeof prompts[key] !== 'object') {
     prompts[key] = {
       type: 'string',
+      label: key,
       default: value
     }
   } else {
@@ -35,10 +40,16 @@ function setDefaultPromptVal(opts, key, value) {
   }
 }
 
-export default async function generate(name, src, dest, done) {
-  debugger
+/**
+ * 
+ * @param name 生成的项目名
+ * @param src 原文件路径
+ * @param dest 生成的目标路径
+ * @param done 回调
+ */
+export default async function generate(name: string, src: string, dest: string, done) {
   const metalsmith = Metalsmith(path.join(src, 'template'))
-  const options = getMetaData(name, src)
+  const options:MetaOption = getMetaData(name, src)
   const metaData = metalsmith.metadata()
   Object.assign(metaData, {
     destDirName: name
@@ -60,18 +71,18 @@ export default async function generate(name, src, dest, done) {
     })
 }
 
-function filterFiles(filters) {
+function filterFiles(filters): MetalSmithPlugin {
   return function (files, metalsmith, done) {
     filter(filters, files, metalsmith.metadata(), done)
   }
 }
-function askQuestions(promps) {
+function askQuestions(promps): MetalSmithPlugin {
   return function (files, metalsmith, done) {
     ask(promps, metalsmith.metadata(), done)
   }
 }
 
-function renderTemplateFiles (skipInterpolation) {
+function renderTemplateFiles (skipInterpolation): MetalSmithPlugin {
   skipInterpolation = typeof skipInterpolation === 'string' ? [skipInterpolation] : skipInterpolation
   return function (files, metalsmith, done) {
     renderFiles(skipInterpolation, files, metalsmith.metadata(), done)

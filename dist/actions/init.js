@@ -1,44 +1,43 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
-var _fs = require('fs');
+var _fs = _interopRequireDefault(require("fs"));
 
-var _fs2 = _interopRequireDefault(_fs);
+var _chalk = _interopRequireDefault(require("chalk"));
 
-var _chalk = require('chalk');
+var _logSymbols = _interopRequireDefault(require("log-symbols"));
 
-var _chalk2 = _interopRequireDefault(_chalk);
+var _download = require("../utils/download");
 
-var _logSymbols = require('log-symbols');
+var _logger = _interopRequireDefault(require("../utils/logger"));
 
-var _logSymbols2 = _interopRequireDefault(_logSymbols);
-
-var _download = require('../utils/download');
-
-var _logger = require('../utils/logger');
-
-var _logger2 = _interopRequireDefault(_logger);
-
-var _constants = require('../utils/constants');
+var _constants = require("../utils/constants");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = async function init(templateName, projectName, ...rest) {
+const initAction = async function init(program, templateName, projectName, ...rest) {
   !_constants.__PROD__ && console.log('arguments', templateName, projectName);
+
   if (!templateName || !projectName) {
-    throw new Error('templateName or projectName not exist');
+    return _logger.default.fatal('templateName or projectName not exist');
   }
-  const program = this;
-  if (_fs2.default.existsSync(projectName)) {
-    console.error(_logSymbols2.default.error, _chalk2.default.red(`ERROR: peoject ${projectName} already exists!`));
+
+  if (_fs.default.existsSync(projectName)) {
+    console.error(_logSymbols.default.error, _chalk.default.red(`ERROR: peoject ${projectName} already exists!`));
     return process.exit(1);
   }
+
   try {
     _download.downloadAndGenerate.call(program, templateName, projectName);
   } catch (err) {
-    _logger2.default.fatal('init fails', err);
+    _logger.default.fatal('init fails', err);
   }
 };
+
+var _default = initAction;
+exports.default = _default;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9hY3Rpb25zL2luaXQudHMiXSwibmFtZXMiOlsiaW5pdEFjdGlvbiIsImluaXQiLCJwcm9ncmFtIiwidGVtcGxhdGVOYW1lIiwicHJvamVjdE5hbWUiLCJyZXN0IiwiX19QUk9EX18iLCJjb25zb2xlIiwibG9nIiwibG9nZ2VyIiwiZmF0YWwiLCJmcyIsImV4aXN0c1N5bmMiLCJlcnJvciIsInN5bWJvbCIsImNoYWxrIiwicmVkIiwicHJvY2VzcyIsImV4aXQiLCJkb3dubG9hZEFuZEdlbmVyYXRlIiwiY2FsbCIsImVyciJdLCJtYXBwaW5ncyI6Ijs7Ozs7OztBQUFBOztBQUNBOztBQUNBOztBQUNBOztBQUNBOztBQUNBOzs7O0FBR0EsTUFBTUEsVUFBd0IsR0FBRyxlQUFlQyxJQUFmLENBQW9CQyxPQUFwQixFQUFzQ0MsWUFBdEMsRUFBNERDLFdBQTVELEVBQWlGLEdBQUdDLElBQXBGLEVBQTBGO0FBQ3pILEdBQUNDLG1CQUFELElBQWFDLE9BQU8sQ0FBQ0MsR0FBUixDQUFZLFdBQVosRUFBeUJMLFlBQXpCLEVBQXVDQyxXQUF2QyxDQUFiOztBQUNBLE1BQUksQ0FBQ0QsWUFBRCxJQUFpQixDQUFDQyxXQUF0QixFQUFtQztBQUNqQyxXQUFPSyxnQkFBT0MsS0FBUCxDQUFhLHVDQUFiLENBQVA7QUFDRDs7QUFDRCxNQUFJQyxZQUFHQyxVQUFILENBQWNSLFdBQWQsQ0FBSixFQUFnQztBQUM5QkcsSUFBQUEsT0FBTyxDQUFDTSxLQUFSLENBQWNDLG9CQUFPRCxLQUFyQixFQUE0QkUsZUFBTUMsR0FBTixDQUFXLGtCQUFpQlosV0FBWSxrQkFBeEMsQ0FBNUI7QUFDQSxXQUFPYSxPQUFPLENBQUNDLElBQVIsQ0FBYSxDQUFiLENBQVA7QUFDRDs7QUFDRCxNQUFJO0FBQ0ZDLGtDQUFvQkMsSUFBcEIsQ0FBeUJsQixPQUF6QixFQUFrQ0MsWUFBbEMsRUFBZ0RDLFdBQWhEO0FBQ0QsR0FGRCxDQUVFLE9BQU9pQixHQUFQLEVBQVk7QUFDWlosb0JBQU9DLEtBQVAsQ0FBYSxZQUFiLEVBQTJCVyxHQUEzQjtBQUNEO0FBQ0YsQ0FkRDs7ZUFlZXJCLFUiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgZnMgZnJvbSAnZnMnXG5pbXBvcnQgY2hhbGsgZnJvbSAnY2hhbGsnXG5pbXBvcnQgc3ltYm9sIGZyb20gJ2xvZy1zeW1ib2xzJ1xuaW1wb3J0IHsgZG93bmxvYWRBbmRHZW5lcmF0ZSB9IGZyb20gJy4uL3V0aWxzL2Rvd25sb2FkJ1xuaW1wb3J0IGxvZ2dlciBmcm9tICcuLi91dGlscy9sb2dnZXInO1xuaW1wb3J0IHsgX19QUk9EX18gfSBmcm9tICcuLi91dGlscy9jb25zdGFudHMnXG5pbXBvcnQgeyBBY3Rpb25NZXRob2QsIENvbW1hbmQgfSBmcm9tICcuLi9pbmRleC5kJ1xuXG5jb25zdCBpbml0QWN0aW9uOiBBY3Rpb25NZXRob2QgPSBhc3luYyBmdW5jdGlvbiBpbml0KHByb2dyYW06IENvbW1hbmQsIHRlbXBsYXRlTmFtZTogc3RyaW5nLCBwcm9qZWN0TmFtZTogc3RyaW5nLCAuLi5yZXN0KSB7XG4gICFfX1BST0RfXyAmJiBjb25zb2xlLmxvZygnYXJndW1lbnRzJywgdGVtcGxhdGVOYW1lLCBwcm9qZWN0TmFtZSk7XG4gIGlmICghdGVtcGxhdGVOYW1lIHx8ICFwcm9qZWN0TmFtZSkge1xuICAgIHJldHVybiBsb2dnZXIuZmF0YWwoJ3RlbXBsYXRlTmFtZSBvciBwcm9qZWN0TmFtZSBub3QgZXhpc3QnKTtcbiAgfVxuICBpZiAoZnMuZXhpc3RzU3luYyhwcm9qZWN0TmFtZSkpIHtcbiAgICBjb25zb2xlLmVycm9yKHN5bWJvbC5lcnJvciwgY2hhbGsucmVkKGBFUlJPUjogcGVvamVjdCAke3Byb2plY3ROYW1lfSBhbHJlYWR5IGV4aXN0cyFgKSlcbiAgICByZXR1cm4gcHJvY2Vzcy5leGl0KDEpXG4gIH1cbiAgdHJ5IHtcbiAgICBkb3dubG9hZEFuZEdlbmVyYXRlLmNhbGwocHJvZ3JhbSwgdGVtcGxhdGVOYW1lLCBwcm9qZWN0TmFtZSlcbiAgfSBjYXRjaCAoZXJyKSB7XG4gICAgbG9nZ2VyLmZhdGFsKCdpbml0IGZhaWxzJywgZXJyKVxuICB9XG59XG5leHBvcnQgZGVmYXVsdCBpbml0QWN0aW9uOyJdfQ==

@@ -1,4 +1,6 @@
 class CommandOption {
+  key: string;
+  desc: string;
   constructor(key, desc) {
     this.key = key
     this.desc = desc

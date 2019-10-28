@@ -1,19 +1,23 @@
-import commander from 'commander';
+import * as commander from 'commander';
 import './update-notifier';
 import { VERSION, __PROD__ } from './utils/constants'
 import apply from './apply'
 import { getCommandOptions, getAvailableOptionKeys, getAvailableOptionNames} from './options'
+import { Command, IActionOption } from './index.d'
 
-const program = new commander.Command()
+const program:Command = new commander.Command()
 
 program.version(VERSION)
 
-const actionMap = {
-  init: {
+const actions: IActionOption[] = [
+  {
+    name: 'init',
+    alias: 'i',
     description: 'generate a new project',
     usages: ['saber init templateName projectName']
   },
-  config: {
+  {
+    name: 'config',
     alias: 'cfg',
     description: 'config .saberrc',
     usages: [
@@ -23,32 +27,32 @@ const actionMap = {
         'saber config reset'
     ]
   }
-}
+];
 
 getCommandOptions().forEach(option => {
   program.option(option.key, option.desc)
 })
 
-Object.keys(actionMap).forEach(actionName => {
-  program.command(actionName)
-    .description(actionMap[actionName].description)
-    .alias(actionMap[actionName].alias)
+actions.forEach(action => {
+  program.command(action.name)
+    .description(action.description)
+    .alias(action.alias)
     .action(() => {
       const actionArgs = getActionArgs()
       printCommandInfo({
         actionArgs,
-        actionName
+        actionName: action.name
       })
-      apply(program, actionName, ...actionArgs)
+      apply(program, action.name, ...actionArgs)
     })
 })
 
 function help() {
   console.log('\r\nUsage:');
-  Object.keys(actionMap).forEach((action) => {
-      actionMap[action].usages.forEach(usage => {
-          console.log('  - ' + usage);
-      });
+  actions.forEach((action: IActionOption) => {
+    action.usages.forEach(usage => {
+        console.log('  - ' + usage);
+    });
   });
   console.log('\r');
 }
@@ -58,7 +62,12 @@ program.on('--help', help)
 
 program.parse(process.argv);
 
-function printCommandInfo(info) {
+
+interface CommandInfo {
+  actionName: string,
+  actionArgs: any[]
+}
+function printCommandInfo(info: CommandInfo) {
   function printOptions() {
     const props = getAvailableOptionNames()
     let result = props.reduce((sum, prop) => sum + `

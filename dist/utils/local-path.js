@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6,16 +6,15 @@ Object.defineProperty(exports, "__esModule", {
 exports.isLocalPath = isLocalPath;
 exports.getTemplatePath = getTemplatePath;
 
-var _path = require('path');
-
-var _path2 = _interopRequireDefault(_path);
+var _path = _interopRequireDefault(require("path"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function isLocalPath(templatePath) {
-  return (/^[./]|(^[a-zA-Z]:)/.test(templatePath)
-  );
+  return /^[./]|(^[a-zA-Z]:)/.test(templatePath);
 }
+
 function getTemplatePath(templatePath) {
-  return _path2.default.isAbsolute(templatePath) ? templatePath : _path2.default.normalize(_path2.default.join(process.cwd(), templatePath));
+  return _path.default.isAbsolute(templatePath) ? templatePath : _path.default.normalize(_path.default.join(process.cwd(), templatePath));
 }
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy91dGlscy9sb2NhbC1wYXRoLnRzIl0sIm5hbWVzIjpbImlzTG9jYWxQYXRoIiwidGVtcGxhdGVQYXRoIiwidGVzdCIsImdldFRlbXBsYXRlUGF0aCIsInBhdGgiLCJpc0Fic29sdXRlIiwibm9ybWFsaXplIiwiam9pbiIsInByb2Nlc3MiLCJjd2QiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7O0FBQUE7Ozs7QUFFTyxTQUFTQSxXQUFULENBQXNCQyxZQUF0QixFQUFxRDtBQUMxRCxTQUFPLHFCQUFxQkMsSUFBckIsQ0FBMEJELFlBQTFCLENBQVA7QUFDRDs7QUFDTSxTQUFTRSxlQUFULENBQTBCRixZQUExQixFQUF3RDtBQUM3RCxTQUFPRyxjQUFLQyxVQUFMLENBQWdCSixZQUFoQixJQUNMQSxZQURLLEdBRUxHLGNBQUtFLFNBQUwsQ0FBZUYsY0FBS0csSUFBTCxDQUFVQyxPQUFPLENBQUNDLEdBQVIsRUFBVixFQUF5QlIsWUFBekIsQ0FBZixDQUZGO0FBR0QiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgcGF0aCBmcm9tICdwYXRoJ1xuXG5leHBvcnQgZnVuY3Rpb24gaXNMb2NhbFBhdGggKHRlbXBsYXRlUGF0aDogc3RyaW5nKTogYm9vbGVhbiB7XG4gIHJldHVybiAvXlsuL118KF5bYS16QS1aXTopLy50ZXN0KHRlbXBsYXRlUGF0aClcbn1cbmV4cG9ydCBmdW5jdGlvbiBnZXRUZW1wbGF0ZVBhdGggKHRlbXBsYXRlUGF0aDogc3RyaW5nKTogc3RyaW5nIHtcbiAgcmV0dXJuIHBhdGguaXNBYnNvbHV0ZSh0ZW1wbGF0ZVBhdGgpXG4gID8gdGVtcGxhdGVQYXRoXG4gIDogcGF0aC5ub3JtYWxpemUocGF0aC5qb2luKHByb2Nlc3MuY3dkKCksIHRlbXBsYXRlUGF0aCkpXG59Il19

@@ -5,7 +5,7 @@ import chalk from 'chalk'
  * prompt answers data.
  */
 
-export default function evaluate (exp, data) {
+export default function evaluate (exp: string, data: Object) {
   /* eslint-disable no-new-func */
   const fn = new Function('data', 'with (data) { return ' + exp + '}')
   try {

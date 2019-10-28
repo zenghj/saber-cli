@@ -1,12 +1,18 @@
 {
   "presets": [
     [
-      "env",
+      "@babel/env",
       {
         "targets": {
-          "node": "current"
+          "node": "10"
         }
       }
-    ]
+    ],
+   
+    "@babel/typescript"],
+  "plugins": [
+    "@babel/plugin-proposal-numeric-separator",
+    "@babel/proposal-class-properties",
+    "@babel/proposal-object-rest-spread"
   ]
 }
