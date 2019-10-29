@@ -11,12 +11,16 @@ var _multimatch = _interopRequireDefault(require("multimatch"));
 
 var _consolidate = _interopRequireDefault(require("consolidate"));
 
+var _logger = _interopRequireDefault(require("./logger"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const render = _consolidate.default.handlebars.render;
 
 function renderFiles(skips, files, data, done) {
   const fileNames = Object.keys(files);
+
+  _logger.default.debug('renderFiles', 'fileNames', fileNames, 'skips', skips);
 
   _async.default.each(fileNames, (fileName, callback) => {
     if ((0, _multimatch.default)([fileName], skips, {

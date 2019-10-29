@@ -17,7 +17,7 @@ var _rimraf = require("rimraf");
 
 var _shelljs = _interopRequireDefault(require("shelljs"));
 
-var _localPath = require("./local-path");
+var _pathUtil = require("./path-util");
 
 var _generate = _interopRequireDefault(require("./generate"));
 
@@ -35,6 +35,87 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 const rc = _rc.default.getInstance();
 
+function generateProject(projectName, templatePath, dest) {
+  return (0, _generate.default)(projectName, templatePath, dest, err => {
+    if (err) {
+      _logger.default.fatal('Fail to generate!', err);
+    } else {
+      _logger.default.success(`Generated ${projectName}.`);
+    }
+  });
+}
+
+function cloneFromPrivateGitRepo(_x, _x2) {
+  return _cloneFromPrivateGitRepo.apply(this, arguments);
+}
+
+function _cloneFromPrivateGitRepo() {
+  _cloneFromPrivateGitRepo = _asyncToGenerator(function* (gitRepoUrl, dest) {
+    if ((0, _fs.existsSync)(dest)) (0, _rimraf.sync)(dest);
+
+    if (!_shelljs.default.which('git')) {
+      _shelljs.default.echo('Sorry, this script requires git');
+
+      _shelljs.default.exit(1);
+    }
+
+    const projectName = _path.default.basename(dest);
+
+    const workDir = _path.default.dirname(dest);
+
+    _shelljs.default.cd(workDir);
+
+    const command = `git clone ${gitRepoUrl} ${projectName}`;
+    console.log(command);
+
+    _shelljs.default.exec(command);
+
+    return true;
+  });
+  return _cloneFromPrivateGitRepo.apply(this, arguments);
+}
+
+function downloadTemplate(_x3, _x4, _x5) {
+  return _downloadTemplate.apply(this, arguments);
+}
+
+function _downloadTemplate() {
+  _downloadTemplate = _asyncToGenerator(function* (templateName, projectName, {
+    isPrivate,
+    clone
+  }) {
+    // let config = rc.getConfig()
+    const registry = rc.getRegistry();
+    let api = `${registry}/${templateName}`;
+    return new Promise((resolve, reject) => {
+      const errorHandler = err => {
+        _logger.default.fatal(`template download fail\n`, `template target: ${api}\n`, err);
+      };
+
+      _logger.default.debug('download repo from ', api);
+
+      if (isPrivate) {
+        cloneFromPrivateGitRepo(`${api}.git`, projectName).then(resolve, errorHandler);
+      } else {
+        (0, _downloadGitRepo.default)(`${api}`, projectName, {
+          clone
+        }, err => {
+          if (err) {
+            errorHandler(err);
+          } else {
+            resolve();
+          }
+        });
+      }
+    });
+  });
+  return _downloadTemplate.apply(this, arguments);
+}
+
+function getDownloadedTemplate(templateName) {
+  return _path.default.join(_constants.HOME, 'saber-cli-templates', templateName.replace(/[\/:]/g, '-'));
+}
+
 function downloadAndGenerate(templateName, projectName) {
   const program = this;
 
@@ -43,82 +124,8 @@ function downloadAndGenerate(templateName, projectName) {
   const clone = program.clone || false;
   const privateRepo = program.private || false;
 
-  function generateProject(projectName, templatePath, dest) {
-    return (0, _generate.default)(projectName, templatePath, dest, err => {
-      if (err) {
-        _logger.default.fatal('Fail to generate!', err);
-      } else {
-        _logger.default.success(`Generated ${projectName}.`);
-      }
-    });
-  }
-
-  function cloneFromPrivateGitRepo(_x, _x2) {
-    return _cloneFromPrivateGitRepo.apply(this, arguments);
-  }
-
-  function _cloneFromPrivateGitRepo() {
-    _cloneFromPrivateGitRepo = _asyncToGenerator(function* (gitRepoUrl, dest) {
-      if ((0, _fs.existsSync)(dest)) (0, _rimraf.sync)(dest);
-
-      if (!_shelljs.default.which('git')) {
-        _shelljs.default.echo('Sorry, this script requires git');
-
-        _shelljs.default.exit(1);
-      }
-
-      const projectName = _path.default.basename(dest);
-
-      const workDir = _path.default.dirname(dest);
-
-      _shelljs.default.cd(workDir);
-
-      const command = `git clone ${gitRepoUrl} ${projectName}`;
-      console.log(command);
-
-      _shelljs.default.exec(command);
-
-      return true;
-    });
-    return _cloneFromPrivateGitRepo.apply(this, arguments);
-  }
-
-  function downloadTemplate(_x3, _x4) {
-    return _downloadTemplate.apply(this, arguments);
-  }
-
-  function _downloadTemplate() {
-    _downloadTemplate = _asyncToGenerator(function* (templateName, projectName) {
-      // let config = rc.getConfig()
-      const registry = rc.getRegistry();
-      let api = `${registry}/${templateName}`;
-      return new Promise((resolve, reject) => {
-        const errorHandler = err => {
-          _logger.default.fatal(`template download fail\n`, `template target: ${api}\n`, err);
-        };
-
-        _constants.__DEV__ && console.log('download repo from ', api);
-
-        if (privateRepo) {
-          cloneFromPrivateGitRepo(`${api}.git`, projectName).then(resolve, errorHandler);
-        } else {
-          (0, _downloadGitRepo.default)(`${api}`, projectName, {
-            clone
-          }, err => {
-            if (err) {
-              errorHandler(err);
-            } else {
-              resolve();
-            }
-          });
-        }
-      });
-    });
-    return _downloadTemplate.apply(this, arguments);
-  }
-
-  if ((0, _localPath.isLocalPath)(templateName)) {
-    const templatePath = (0, _localPath.getTemplatePath)(templateName);
+  if ((0, _pathUtil.isLocalPath)(templateName)) {
+    const templatePath = (0, _pathUtil.getTemplatePath)(templateName);
 
     if ((0, _fs.existsSync)(templatePath)) {
       return generateProject(projectName, templatePath, dest);
@@ -126,12 +133,14 @@ function downloadAndGenerate(templateName, projectName) {
       _logger.default.fatal(`${templatePath} not exist.`);
     }
   } else {
-    const tmp = _path.default.join(_constants.HOME, 'saber-cli-templates', templateName.replace(/[\/:]/g, '-'));
-
+    const tmp = getDownloadedTemplate(templateName);
     const spinner = (0, _ora.default)('downloading template\n');
     spinner.start();
     if ((0, _fs.existsSync)(tmp)) (0, _rimraf.sync)(tmp);
-    downloadTemplate(templateName, tmp).then(() => {
+    downloadTemplate(templateName, tmp, {
+      isPrivate: privateRepo,
+      clone: clone
+    }).then(() => {
       return generateProject(projectName, tmp, dest);
     }, err => {
       return _logger.default.fatal(`Fail to download template: ${templateName}\n${err}`);

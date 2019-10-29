@@ -42,10 +42,10 @@ function setDefaultPromptVal(opts: MetaOption, key: string, value) {
 
 /**
  * 
- * @param name 生成的项目名
- * @param src 原文件路径
- * @param dest 生成的目标路径
- * @param done 回调
+ * @param name project name
+ * @param src origin repo path
+ * @param destination path of generated project
+ * @param callback will be invoked after generating finish
  */
 export default async function generate(name: string, src: string, dest: string, done) {
   const metalsmith = Metalsmith(path.join(src, 'template'))
@@ -88,15 +88,14 @@ function renderTemplateFiles (skipInterpolation): MetalSmithPlugin {
     renderFiles(skipInterpolation, files, metalsmith.metadata(), done)
   }
 }
+
 /**
  * Display template complete message.
  *
  * @param {String} message
  * @param {Object} data
  */
-
-
-function logMessage (message, data) {
+function logMessage (message: string, data: Object) {
   if (!message) return
   render(message, data, (err, res) => {
     if (err) {

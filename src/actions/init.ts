@@ -7,7 +7,7 @@ import { __PROD__ } from '../utils/constants'
 import { ActionMethod, Command } from '../index.d'
 
 const initAction: ActionMethod = async function init(program: Command, templateName: string, projectName: string, ...rest) {
-  !__PROD__ && console.log('arguments', templateName, projectName);
+  logger.debug('initAction arguments', templateName, projectName)
   if (!templateName || !projectName) {
     return logger.fatal('templateName or projectName not exist');
   }

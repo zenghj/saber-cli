@@ -1,17 +1,17 @@
 import async from 'async'
 import inquirer from 'inquirer'
-import evaluate from './eval'
+import evaluate, { geneFunctionFromString } from './eval'
 import { MetaPrompts, MetalSmithFiles, MetaData, CallbackFunction, MetaPrompt} from '../index.d'
-
-const promptMapping = {
-  string: 'input',
-  boolean: 'confirm'
-}
+import logger from './logger'
 
 export default function ask(prompts: MetaPrompts, data: MetaData, done: CallbackFunction) {
+  function _done () {
+    done()
+    logger.debug('MetaData', data)
+  }
   async.eachSeries(Object.keys(prompts), (key: string, next) => {
     prompt(data, key, prompts[key], next)
-  }, done);
+  }, _done);
 }
 
 function prompt(data: MetaData, key: string, promptOption: MetaPrompt, done: CallbackFunction) {
@@ -22,7 +22,11 @@ function prompt(data: MetaData, key: string, promptOption: MetaPrompt, done: Cal
   if (typeof defaultValue === 'function') {
     defaultValue = defaultValue.call(this, data)
   }
-
+  const promptMapping = {
+    string: 'input',
+    boolean: 'confirm'
+  }
+  
   inquirer.prompt([{
     // see https://www.npmjs.com/package/inquirer#prompt
     type: promptMapping[promptOption.type] || promptOption.type,
@@ -30,7 +34,7 @@ function prompt(data: MetaData, key: string, promptOption: MetaPrompt, done: Cal
     message: promptOption.message || promptOption.label || key,
     default: defaultValue,
     choices: promptOption.choices || [],
-    validate: promptOption.validate || (() => true)
+    validate: typeof promptOption.validate === 'string' ? geneFunctionFromString(promptOption.validate) : (() => true)
   }]).then(answers => {
     if (Array.isArray(answers[key])) {
       data[key] = {}

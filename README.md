@@ -1,3 +1,5 @@
+[toc]
+
 # Saber-cli
 
 Saber-cli is a project scaffold management tool used to scaffold your project based on specific template sources. The default registry is [saber-cli-templates](https://github.com/saber-cli-templates). And you can switch to your personal template registry source.That's really awesome!
@@ -16,12 +18,11 @@ yarn global add @zenghj/saber-cli
 saber init templateName projectName
 ```
 
-Usage: saber [options] [command]
-
 ## Usage
 
 ```bash
 Usage: saber [options] [command]
+# saber-dev [options] [command] (print some logs for dev)
 
 Options:
   -V, --version  output the version number
@@ -54,9 +55,124 @@ If you don't want to put your template on public git platform like github, you c
 
 comming soon...
 
-### About templates
+### Develop template 
 
-You can custom your template files with prompt result using [handlebarsjs](https://handlebarsjs.com/) syntax.
+The template repository should have files like below:
+```
+├── README.md // template description
+├── meta.json // config custom field here
+└── template // project template files
+    └── anything you like!
+```
+
+#### meta.json
+
+`meta.json` is where you define some magic things, which looks like this: 
+
+```
+{
+  "prompts": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "label": "Project name"
+    },
+    "description": {
+      "type": "string",
+      "required": true,
+      "label": "Project description",
+      "default": "A demo project"
+    },
+    "author": {
+      "type": "string",
+      "label": "Author"
+    },
+    "license": {
+      "type": "string",
+      "label": "License",
+      "default": "MIT",
+      "validate": "function(answer) {var licenses = ['LGPL', 'MIT', 'GPL']; if (!licenses.includes(answer)) {return `License should be one of ${licenses}`} return true}"
+    },
+    "test_checkbox": {
+      "type": "checkbox",
+      "label": "test_checkbox",
+      "choices": [
+        {
+          "value": "A",
+          "name": "A"
+        },
+        {
+          "checked": true,
+          "value": "B",
+          "name": "B"
+        }
+      ]
+    },
+    "include_filters_dir": {
+      "type": "confirm",
+      "label": "test_confirm"
+    }
+  },
+  "skipInterpolation": [
+    "skip/**"
+  ],
+  "filters": {
+    "filters/**": "data.include_filters_dir === true"
+  },
+  "completeMessage": "To get started:\n\n  cd {{destDirName}}\n  npm install\n  npm run dev"
+}
+```
+The meta option interface:
+
+```ts
+type MetaOption = {
+  prompts?: MetaPrompts;// prompts to show when initializing the project
+  filters?: MetaFilters; // include some files only when satisfy some condition
+  skipInterpolation?: string|string[]; // files not render with meta data,just simply copy
+  completeMessage?: string; // displaying message when completing (when `complete` is not defined)
+  complete?: (metadata: Object) => any; // callback function when completing
+}
+```
+
+##### prompts
+
+use `prompts` field to define everything you need to know when initial the template.
+the prompt interface looks like below:
+
+```ts
+type MetaPrompt = {
+  type: string; // prompt提示类型，详见https://www.npmjs.com/package/inquirer
+  message?: string; // 提示文案
+  label?: string; // 提示文案，同message
+  required?: boolean; // 是否必填项
+  default?: any; // 默认值
+  when?: string; // 满足此表达式条件时才会出现该prompt提示
+  choices?: any[]; // type为list时的选项
+  validate?: (...args: any[]) => boolean|string; // 输入结果是否合法校验函数
+}
+```
+
+#### filters
+
+filters interface:
+
+```ts
+type MetaFilters = {
+  // propName is fileblob tell whether the file will be detect or not
+  // the value is an expression return a boolean,
+  // if it is false, then the file will be not be generated in the final project.
+  // filename blob pattern see https://www.npmjs.com/package/minimatch
+  [propName: string]: string // filenameBlob: conditionExpression
+}
+```
+
+#### skipInterpolation
+
+`skipInterpolation` tell the files which will be skiped during rendering files with [handlebarsjs](https://handlebarsjs.com/). See [multimatch](https://www.npmjs.com/package/multimatch) for match patterns.
+
+### Render template
+
+We use [handlebarsjs](https://handlebarsjs.com/) to render template content with meta data. So learn the [handlebarsjs](https://handlebarsjs.com/) template syntax at first.
 
 ## Develop
 

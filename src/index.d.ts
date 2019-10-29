@@ -25,14 +25,14 @@ type MetalSmithFiles = {
 export type MetalSmithPlugin = (files: MetalSmithFiles, metalsmith: Metalsmith, callback) => any;
 
 export type MetaPrompt = {
-  type: string; // prompt提示类型，详见https://www.npmjs.com/package/inquirer
-  message?: string; // 提示文案
-  label?: string; // 提示文案，同message
-  required?: boolean; // 是否必填项
-  default?: any; // 默认值
-  when?: string; // 满足此表达式条件时才会出现该prompt提示
-  choices?: any[]; // type为list时的选项
-  validate?: (...args: any[]) => boolean; // 输入结果是否合法校验函数
+  type: string; // prompt type, see https://www.npmjs.com/package/inquirer
+  message?: string; // tips message
+  label?: string; // tips message, same as `message`
+  required?: boolean; // whether be required or not
+  default?: any; // default value
+  when?: string; // if `when` expression value is true, then this prompt will show
+  choices?: any[]; // needed when type is like 'list', 'checkbox' and so on
+  validate?: string | ((...args: any[]) => boolean|string); // validate the input value
 }
 export type MetaPrompts = {
   // metadata key
@@ -40,20 +40,23 @@ export type MetaPrompts = {
 }
 
 export type MetaFilters = {
-  // filenameBlob: conditionExpression 
-  [propName: string]: string
+  // propName is fileblob tell whether the file will be detect or not
+  // the value is an expression return a boolean,
+  // if it is false, then the file will be not be generated in the final project.
+  // filename blob pattern see https://www.npmjs.com/package/minimatch
+  [propName: string]: string // filenameBlob: conditionExpression
 }
 
 export type MetaOption = {
-  prompts?: MetaPrompts;// 提示对话列表
-  filters?: MetaFilters; // 需要排除的特定文件（满足特定条件时）
-  skipInterpolation?: string|string[]; // 生成时需要跳过的文件blob
-  completeMessage?: string; // 成功之后的提示文案 （未配置complete时）
-  complete?: (metadata: Object) => any; // 成功之后的回调
+  prompts?: MetaPrompts;// prompts to show when initializing the project 
+  filters?: MetaFilters; // include some files only when satisfy some condition
+  skipInterpolation?: string|string[]; // files not render with meta data,just simply copy
+  completeMessage?: string; // displaying message when completing (when `complete` is not defined)
+  complete?: (metadata: Object) => any; // callback function when completing
 }
 
 export type MetaData = {
-  destDirName: string; // 生成的项目名
+  destDirName: string; // generated project name
   [propName: string]: any;
 }
 

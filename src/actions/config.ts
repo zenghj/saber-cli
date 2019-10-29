@@ -7,9 +7,9 @@ const configAction: ActionMethod = async function config(program: Command, actio
   switch (action) {
     case 'get': 
       if (key) {
-        console.log(await rc.get(key))
+        console.log(rc.get(key))
       } else {
-        const config = await rc.getConfig()
+        const config = rc.getConfig()
         console.log(JSON.stringify(config, null, 2))
       }
       break;

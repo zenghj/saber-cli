@@ -1,5 +1,6 @@
 import chalk from 'chalk'
 import { __PROD__, __DEV__ } from './constants'
+
 const prefix = 'saber-cli'
 
 function fatal (...args) {
@@ -11,15 +12,6 @@ function success (...args) {
   console.log(chalk.green(`${prefix}:`, ...args))
 }
 
-// const noop = () => {}
-// // TODO
-// function devWrapper(log) {
-//   if (!__PROD__) {
-//     return log
-//   }
-//   return noop;
-// }
-
 class Logger {
   constructor() {}
   fatal (...args) {
@@ -30,6 +22,7 @@ class Logger {
   }
   debug(...args) {
     if (__DEV__) {
+      debugger;
       return console.log(...args)
     }
   }

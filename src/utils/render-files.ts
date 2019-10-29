@@ -1,10 +1,12 @@
 import async from 'async'
 import multimatch from 'multimatch'
 import consolidate from 'consolidate'
+import logger from './logger'
 const render = consolidate.handlebars.render
 
 export default function renderFiles(skips, files, data, done) {
   const fileNames = Object.keys(files)
+  logger.debug('renderFiles', 'fileNames', fileNames, 'skips', skips )
   async.each(fileNames, (fileName, callback) => {
     if (multimatch([fileName], skips, {
       dot: true

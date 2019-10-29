@@ -20,15 +20,7 @@ function fatal(...args) {
 
 function success(...args) {
   console.log(_chalk.default.green(`${prefix}:`, ...args));
-} // const noop = () => {}
-// // TODO
-// function devWrapper(log) {
-//   if (!__PROD__) {
-//     return log
-//   }
-//   return noop;
-// }
-
+}
 
 class Logger {
   constructor() {}
@@ -43,6 +35,7 @@ class Logger {
 
   debug(...args) {
     if (_constants.__DEV__) {
+      debugger;
       return console.log(...args);
     }
   }

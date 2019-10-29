@@ -15,8 +15,6 @@ var _download = require("../utils/download");
 
 var _logger = _interopRequireDefault(require("../utils/logger"));
 
-var _constants = require("../utils/constants");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -27,7 +25,7 @@ const initAction =
 /*#__PURE__*/
 function () {
   var _init = _asyncToGenerator(function* (program, templateName, projectName, ...rest) {
-    !_constants.__PROD__ && console.log('arguments', templateName, projectName);
+    _logger.default.debug('initAction arguments', templateName, projectName);
 
     if (!templateName || !projectName) {
       return _logger.default.fatal('templateName or projectName not exist');

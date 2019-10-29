@@ -66,10 +66,10 @@ function setDefaultPromptVal(opts, key, value) {
 }
 /**
  * 
- * @param name 生成的项目名
- * @param src 原文件路径
- * @param dest 生成的目标路径
- * @param done 回调
+ * @param name project name
+ * @param src origin repo path
+ * @param destination path of generated project
+ * @param callback will be invoked after generating finish
  */
 
 

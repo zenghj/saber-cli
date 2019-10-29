@@ -22,9 +22,9 @@ function () {
     switch (action) {
       case 'get':
         if (key) {
-          console.log((yield rc.get(key)));
+          console.log(rc.get(key));
         } else {
-          const config = yield rc.getConfig();
+          const config = rc.getConfig();
           console.log(JSON.stringify(config, null, 2));
         }
 
