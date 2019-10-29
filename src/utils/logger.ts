@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import { __PROD__ } from './constants'
+import { __PROD__, __DEV__ } from './constants'
 const prefix = 'saber-cli'
 
 function fatal (...args) {
@@ -27,6 +27,11 @@ class Logger {
   }
   success(...args) {
     return success(...args);
+  }
+  debug(...args) {
+    if (__DEV__) {
+      return console.log(...args)
+    }
   }
 }
 

@@ -89,19 +89,24 @@ function downloadAndGenerate(templateName, projectName) {
 
   function _downloadTemplate() {
     _downloadTemplate = _asyncToGenerator(function* (templateName, projectName) {
-      let config = rc.getConfig();
-      let api = `${config.registry}/${templateName}`;
+      // let config = rc.getConfig()
+      const registry = rc.getRegistry();
+      let api = `${registry}/${templateName}`;
       return new Promise((resolve, reject) => {
+        const errorHandler = err => {
+          _logger.default.fatal(`template download fail\n`, `template target: ${api}\n`, err);
+        };
+
         _constants.__DEV__ && console.log('download repo from ', api);
 
         if (privateRepo) {
-          cloneFromPrivateGitRepo(`${api}.git`, projectName).then(resolve, reject);
+          cloneFromPrivateGitRepo(`${api}.git`, projectName).then(resolve, errorHandler);
         } else {
           (0, _downloadGitRepo.default)(`${api}`, projectName, {
             clone
           }, err => {
             if (err) {
-              reject(err);
+              errorHandler(err);
             } else {
               resolve();
             }
@@ -123,7 +128,7 @@ function downloadAndGenerate(templateName, projectName) {
   } else {
     const tmp = _path.default.join(_constants.HOME, 'saber-cli-templates', templateName.replace(/[\/:]/g, '-'));
 
-    const spinner = (0, _ora.default)('downloading template');
+    const spinner = (0, _ora.default)('downloading template\n');
     spinner.start();
     if ((0, _fs.existsSync)(tmp)) (0, _rimraf.sync)(tmp);
     downloadTemplate(templateName, tmp).then(() => {

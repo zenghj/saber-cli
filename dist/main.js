@@ -22,12 +22,12 @@ const actions = [{
   name: 'init',
   alias: 'i',
   description: 'generate a new project',
-  usages: ['saber init templateName projectName']
+  usages: [['saber init templateName projectName', 'create a project from a template']]
 }, {
   name: 'config',
   alias: 'cfg',
   description: 'config .saberrc',
-  usages: ['saber config set <k> <v>', 'saber config get <k>', 'saber config get', 'saber config reset']
+  usages: [['saber config set <k> <v>', 'set config'], ['saber config get <k>', 'get config[k]'], ['saber config get', 'get total config'], ['saber config reset', 'reset total config'], ['saber config select-registry', 'select registry from config.registries'], ['saber config sr', 'abbreviation of "saber config select-registry"']]
 }];
 let program;
 (0, _nodeEngineGuard.default)(_constants.pkgJson.engines.node, run);
@@ -62,10 +62,29 @@ function assemblyProgramActions() {
 }
 
 function help() {
+  function getUsagePadding() {
+    let width = 0;
+    actions.forEach(action => {
+      action.usages.forEach(usage => {
+        const w = usage[0].length;
+
+        if (w > width) {
+          width = w;
+        }
+      });
+    });
+    return width;
+  }
+
+  function withPadding(width, str) {
+    return str.padEnd(width, ' ');
+  }
+
   console.log('\r\nUsage:');
+  const padding = getUsagePadding();
   actions.forEach(action => {
     action.usages.forEach(usage => {
-      console.log('  - ' + usage);
+      console.log('  - ' + `${withPadding(padding, usage[0])}  ${usage[1]}`);
     });
   });
   console.log('\r');

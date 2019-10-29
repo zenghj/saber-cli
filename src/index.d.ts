@@ -6,7 +6,7 @@ interface IActionOption {
   name: string;
   alias?: string;
   description: string;
-  usages: string[];
+  usages: string[][];
 }
 
 interface ActionMethod {

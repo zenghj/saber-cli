@@ -19,6 +19,10 @@ const configAction: ActionMethod = async function config(program: Command, actio
     case 'reset':
       rc.reset()
       break
+    case 'select-registry': 
+    case 'sr':
+      rc.selectRegistry();
+      break;
     default:
       console.log('unknown config action!')
   }

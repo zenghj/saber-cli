@@ -34,17 +34,20 @@ Commands:
   config|cfg     config .saberrc
 
 Usage:
-  - saber init templateName projectName
-  - saber config set <k> <v>
-  - saber config get <k>
-  - saber config get
-  - saber config reset
+  - saber init templateName projectName  create a project from a template
+  - saber config set <k> <v>             set config
+  - saber config get <k>                 get config[k]
+  - saber config get                     get total config
+  - saber config reset                   reset total config
+  - saber config select-registry         select registry from config.registries
+  - saber config sr                      abbreviation of "saber config select-registry"
 ```
+
 You can use `saber config set registry {registrySource}` to change templates' downloading source. Then it will get template from `${registrySource}/${templateName}`
 
 ## Download template from private gitlab
 
-If you don't want to put your template on public git platform like github, you can set the private registry source first and then use `saber init -p ${templateName} ${projectName}`. It will directly clone the repository from the registry with. But make sure you have access to the private repository.
+If you don't want to put your template on public git platform like github, you can set the private registry source first and then use `saber init -p ${templateName} ${projectName}`. It will directly execute shell script to clone the repository from the private registry. But make sure you have access to the private repository.
 
 
 ## Supported templates
@@ -52,6 +55,7 @@ If you don't want to put your template on public git platform like github, you c
 comming soon...
 
 ### About templates
+
 You can custom your template files with prompt result using [handlebarsjs](https://handlebarsjs.com/) syntax.
 
 ## Develop

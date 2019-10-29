@@ -7,6 +7,8 @@ exports.default = void 0;
 
 var _chalk = _interopRequireDefault(require("chalk"));
 
+var _constants = require("./constants");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const prefix = 'saber-cli';
@@ -37,6 +39,12 @@ class Logger {
 
   success(...args) {
     return success(...args);
+  }
+
+  debug(...args) {
+    if (_constants.__DEV__) {
+      return console.log(...args);
+    }
   }
 
 }

@@ -36,6 +36,7 @@ function prompt(data, key, promptOption, done) {
   }
 
   _inquirer.default.prompt([{
+    // see https://www.npmjs.com/package/inquirer#prompt
     type: promptMapping[promptOption.type] || promptOption.type,
     name: key,
     message: promptOption.message || promptOption.label || key,
