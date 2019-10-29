@@ -12,3 +12,4 @@ export const HOME:string = userHome
 export const RCFilePath:string = path.join(HOME, '.saberrc')
 export const __DEV__:boolean = process.env.NODE_ENV === Env.dev
 export const __PROD__:boolean = process.env.NODE_ENV === Env.prod || !process.env.NODE_ENV
+export const pkgJson = Object.assign({}, packageJson)

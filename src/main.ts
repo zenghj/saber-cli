@@ -1,13 +1,10 @@
 import * as commander from 'commander';
 import './update-notifier';
-import { VERSION, __PROD__ } from './utils/constants'
+import { VERSION, __PROD__, pkgJson } from './utils/constants'
 import apply from './apply'
-import { getCommandOptions, getAvailableOptionKeys, getAvailableOptionNames} from './options'
+import { getCommandOptions, getAvailableOptionKeys, getAvailableOptionNames } from './options'
 import { Command, IActionOption } from './index.d'
-
-const program:Command = new commander.Command()
-
-program.version(VERSION)
+import nodeEngineGuard from './utils/node-engine-guard'
 
 const actions: IActionOption[] = [
   {
@@ -21,73 +18,88 @@ const actions: IActionOption[] = [
     alias: 'cfg',
     description: 'config .saberrc',
     usages: [
-        'saber config set <k> <v>',
-        'saber config get <k>',
-        'saber config get',
-        'saber config reset'
+      'saber config set <k> <v>',
+      'saber config get <k>',
+      'saber config get',
+      'saber config reset'
     ]
   }
 ];
+let program: Command;
 
-getCommandOptions().forEach(option => {
-  program.option(option.key, option.desc)
-})
+nodeEngineGuard(pkgJson.engines.node, run)
 
-actions.forEach(action => {
-  program.command(action.name)
-    .description(action.description)
-    .alias(action.alias)
-    .action(() => {
-      const actionArgs = getActionArgs()
-      printCommandInfo({
-        actionArgs,
-        actionName: action.name
+function run() {
+  program = new commander.Command()
+  program.version(VERSION)
+
+  assemblyProgramOptions();
+  assemblyProgramActions();
+
+  program.on('-h', help)
+  program.on('--help', help)
+
+  program.parse(process.argv);
+}
+
+function assemblyProgramOptions() {
+  getCommandOptions().forEach(option => {
+    program.option(option.key, option.desc)
+  })
+}
+
+function assemblyProgramActions() {
+  actions.forEach(action => {
+    program.command(action.name)
+      .description(action.description)
+      .alias(action.alias)
+      .action(() => {
+        const actionArgs = getActionArgs()
+        printCommandInfo({
+          actionArgs,
+          actionName: action.name
+        })
+        apply(program, action.name, ...actionArgs)
       })
-      apply(program, action.name, ...actionArgs)
-    })
-})
+  })
+}
 
 function help() {
   console.log('\r\nUsage:');
   actions.forEach((action: IActionOption) => {
     action.usages.forEach(usage => {
-        console.log('  - ' + usage);
+      console.log('  - ' + usage);
     });
   });
   console.log('\r');
 }
-program.on('-h', help)
-program.on('--help', help)
 
-
-program.parse(process.argv);
-
-
-interface CommandInfo {
-  actionName: string,
-  actionArgs: any[]
-}
-function printCommandInfo(info: CommandInfo) {
-  function printOptions() {
+function printCommandInfo({actionName, actionArgs}) {
+  function getProgramOptionValues() {
     const props = getAvailableOptionNames()
-    let result = props.reduce((sum, prop) => sum + `
-    ${prop}: ${program[prop]}
-    `, '');
-    console.log(
-      'OPTIONS',
-      result)
+    return props.reduce((result, prop) => {
+      result[prop] = program[prop]
+      return result;
+    } , {});
   }
+
+  const result = {
+    MODE: process.env.NODE_ENV,
+    ARGS: process.argv,
+    ACTION_NAME: actionName,
+    ACTION_ARGS: actionArgs,
+    OPTIONS: getProgramOptionValues(),
+  }
+
+  function printResult(data) {
+    // Object.keys(data).forEach(key => {
+    //   data[key] = JSON.stringify(data[key], null, 2)
+    // })
+    console.log(data);
+  }
+  
   if (!__PROD__) {
-    console.log(`
-    MODE: ${process.env.NODE_ENV}
-    ARGS:`,
-    process.argv,
-    `
-    actionName: ${info.actionName}
-    actionArgs: `,
-    info.actionArgs
-    )
-    printOptions()
+    printResult(result)
   }
 }
 

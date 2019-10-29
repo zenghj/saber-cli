@@ -11,11 +11,14 @@
     "type-check": "tsc --noEmit",
     "build": "npm run build:js",
     "build:types": "tsc --emitDeclarationOnly",
-    "build:js": "babel src -d dist --extensions \".ts,.js\" --source-maps inline",
+    "build:js": "babel src -d dist --extensions \".ts,.js\"",
     "watch": "babel src -d dist --extensions \".ts,.js\" --watch",
     "debug": "node-nightly --inspect-brk ./bin/www init demo demo",
     "test": "echo \"Error: no test specified\" && exit 1",
     "release": "yarn build && yarn publish --access public"
+  },
+  "engines": {
+    "node": ">=6.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
