@@ -8,8 +8,9 @@
     "saber-dev": "./bin/dev"
   },
   "scripts": {
+    "dev": "yarn watch",
     "type-check": "tsc --noEmit",
-    "build": "npm run build:js",
+    "build": "yarn run build:js",
     "build:types": "tsc --emitDeclarationOnly",
     "build:js": "babel src -d dist --extensions \".ts,.js\"",
     "watch": "babel src -d dist --extensions \".ts,.js\" --watch",

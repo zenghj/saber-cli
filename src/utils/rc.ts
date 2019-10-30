@@ -47,7 +47,11 @@ export default class RC {
     return config ? config[key] : ''
   }
   set(key: string, value) {
-    if (!key) return console.error('key is required!')
+    if (!key) {
+      console.error('key is required!\n\nSupported key list:')
+      console.error(this.setableKeys.join('\n'))
+      return;
+    }
     if (!this.setableKeys.includes(key)) return console.error(`available keys: "${this.setableKeys.join(',')}" `)
     const config = this.getConfig()
     if (key === registerKey) {

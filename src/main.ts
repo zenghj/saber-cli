@@ -21,6 +21,7 @@ const actions: IActionOption[] = [
     description: 'config .saberrc',
     usages: [
       ['saber config set <k> <v>', 'set config'],
+      ['saber config set registry $registryUri', 'set a template registry'],
       ['saber config get <k>', 'get config[k]'],
       ['saber config get', 'get total config'], 
       ['saber config reset', 'reset total config'],

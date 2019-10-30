@@ -35,13 +35,14 @@ Commands:
   config|cfg     config .saberrc
 
 Usage:
-  - saber init templateName projectName  create a project from a template
-  - saber config set <k> <v>             set config
-  - saber config get <k>                 get config[k]
-  - saber config get                     get total config
-  - saber config reset                   reset total config
-  - saber config select-registry         select registry from config.registries
-  - saber config sr                      abbreviation of "saber config select-registry"
+  - saber init templateName projectName     create a project from a template
+  - saber config set <k> <v>                set config
+  - saber config set registry $registryUri  set a template registry
+  - saber config get <k>                    get config[k]
+  - saber config get                        get total config
+  - saber config reset                      reset total config
+  - saber config select-registry            select registry from config.registries
+  - saber config sr                         abbreviation of "saber config select-registry"
 ```
 
 You can use `saber config set registry {registrySource}` to change templates' downloading source. Then it will get template from `${registrySource}/${templateName}`
@@ -141,14 +142,14 @@ the prompt interface looks like below:
 
 ```ts
 type MetaPrompt = {
-  type: string; // prompt提示类型，详见https://www.npmjs.com/package/inquirer
-  message?: string; // 提示文案
-  label?: string; // 提示文案，同message
-  required?: boolean; // 是否必填项
-  default?: any; // 默认值
-  when?: string; // 满足此表达式条件时才会出现该prompt提示
-  choices?: any[]; // type为list时的选项
-  validate?: (...args: any[]) => boolean|string; // 输入结果是否合法校验函数
+  type: string; // prompt type, see https://www.npmjs.com/package/inquirer
+  message?: string; // tips message
+  label?: string; // tips message, same as `message`
+  required?: boolean; // whether be required or not
+  default?: any; // default value
+  when?: string; // if `when` expression value is true, then this prompt will show
+  choices?: any[]; // needed when type is like 'list', 'checkbox' and so on
+  validate?: string | ((...args: any[]) => boolean|string); // validate the input value
 }
 ```
 

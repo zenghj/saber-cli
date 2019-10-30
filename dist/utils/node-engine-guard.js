@@ -16,5 +16,5 @@ function nodeEngineGuard(versionRequirement, done) {
     return done();
   }
 
-  _logger.default.fatal(`Your node engine version must ${versionRequirement}`);
+  _logger.default.fatal(`Your node engine version must ${versionRequirement}. Current version is ${process.version}!`);
 }

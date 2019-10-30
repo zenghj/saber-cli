@@ -27,7 +27,7 @@ const actions = [{
   name: 'config',
   alias: 'cfg',
   description: 'config .saberrc',
-  usages: [['saber config set <k> <v>', 'set config'], ['saber config get <k>', 'get config[k]'], ['saber config get', 'get total config'], ['saber config reset', 'reset total config'], ['saber config select-registry', 'select registry from config.registries'], ['saber config sr', 'abbreviation of "saber config select-registry"']]
+  usages: [['saber config set <k> <v>', 'set config'], ['saber config set registry $registryUri', 'set a template registry'], ['saber config get <k>', 'get config[k]'], ['saber config get', 'get total config'], ['saber config reset', 'reset total config'], ['saber config select-registry', 'select registry from config.registries'], ['saber config sr', 'abbreviation of "saber config select-registry"']]
 }];
 let program;
 (0, _nodeEngineGuard.default)(_constants.pkgJson.engines.node, run);

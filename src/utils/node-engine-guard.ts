@@ -5,5 +5,5 @@ export default function nodeEngineGuard(versionRequirement: string, done: () => 
   if (semver.satisfies(process.version, versionRequirement)) {
     return done()
   }
-  logger.fatal(`Your node engine version must ${versionRequirement}`)
+  logger.fatal(`Your node engine version must ${versionRequirement}. Current version is ${process.version}!`)
 }
