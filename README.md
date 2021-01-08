@@ -33,6 +33,7 @@ Options:
 Commands:
   init|i         generate a new project
   config|cfg     config .saberrc
+  list|ls        list available templates
 
 Usage:
   - saber init templateName projectName     create a project from a template
@@ -43,6 +44,8 @@ Usage:
   - saber config reset                      reset total config
   - saber config select-registry            select registry from config.registries
   - saber config sr                         abbreviation of "saber config select-registry"
+  - saber list                              list available templates
+  - saber ls                                abbreviation of "saber list"
 ```
 
 You can use `saber config set registry {registrySource}` to change templates' downloading source. Then it will get template from `${registrySource}/${templateName}`
