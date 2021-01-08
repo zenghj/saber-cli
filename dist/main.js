@@ -33,6 +33,11 @@ const actions = [{
   alias: 'ls',
   description: 'list available templates',
   usages: [['saber list', 'list available templates'], ['saber ls', 'abbreviation of "saber list"']]
+}, {
+  name: 'version',
+  alias: 'v',
+  description: 'current cli version',
+  usages: [['saber version', 'current cli version'], ['saber v', 'abbreviation of "saber version"']]
 }];
 let program;
 (0, _nodeEngineGuard.default)(_constants.pkgJson.engines.node, run);
