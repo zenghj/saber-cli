@@ -23,13 +23,14 @@ function renderFiles(skips, files, data, done) {
   _logger.default.debug('renderFiles', 'fileNames', fileNames, 'skips', skips);
 
   _async.default.each(fileNames, (fileName, callback) => {
+    // skip specific files
     if ((0, _multimatch.default)([fileName], skips, {
       dot: true
     }).length) {
       return callback();
     }
 
-    const str = files[fileName].contents.toString();
+    const str = files[fileName].contents.toString(); // skip file with no handlebar syntax
 
     if (!/{{([^{}]+)}}/g.test(str)) {
       return callback();

@@ -28,6 +28,15 @@ const actions: IActionOption[] = [
       ['saber config select-registry', 'select registry from config.registries'],
       ['saber config sr', 'abbreviation of "saber config select-registry"']
     ]
+  },
+  {
+    name: 'list',
+    alias: 'ls',
+    description: 'list available templates',
+    usages: [
+      ['saber list', 'list available templates'],
+      ['saber ls', 'abbreviation of "saber list"']
+    ]
   }
 ];
 let program: Command;

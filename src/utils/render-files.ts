@@ -8,12 +8,14 @@ export default function renderFiles(skips, files, data, done) {
   const fileNames = Object.keys(files)
   logger.debug('renderFiles', 'fileNames', fileNames, 'skips', skips )
   async.each(fileNames, (fileName, callback) => {
+    // skip specific files
     if (multimatch([fileName], skips, {
       dot: true
     }).length) {
       return callback()
     }
     const str = files[fileName].contents.toString()
+    // skip file with no handlebar syntax
     if (!/{{([^{}]+)}}/g.test(str)) {
       return callback()
     }
